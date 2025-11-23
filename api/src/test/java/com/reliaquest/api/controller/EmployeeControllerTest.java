@@ -41,7 +41,7 @@ class EmployeeControllerTest {
     @Test
     void getAllEmployees_Success() {
         // Given
-        when(employeeServiceApi.getAllEployees()).thenReturn(ResponseEntity.ok(testEmployees));
+        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(testEmployees));
 
         // When
         ResponseEntity<List<Employee>> response = employeeController.getAllEmployees();
@@ -49,13 +49,13 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(testEmployees, response.getBody());
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
     void getAllEmployees_ServiceReturnsError() {
         // Given
-        when(employeeServiceApi.getAllEployees())
+        when(employeeServiceApi.getAllEmployees())
                 .thenReturn(ResponseEntity.internalServerError().build());
 
         // When
@@ -63,7 +63,7 @@ class EmployeeControllerTest {
 
         // Then
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
@@ -147,33 +147,32 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void getEmployeeById_NullId() {
+    void getEmployeeById_ValidId_CallsService() {
+        // Given
+        String employeeId = "123e4567-e89b-12d3-a456-426614174000";
+        when(employeeServiceApi.getEmployeeById(employeeId)).thenReturn(ResponseEntity.ok(testEmployee1));
+
         // When
-        ResponseEntity<Employee> response = employeeController.getEmployeeById(null);
+        ResponseEntity<Employee> response = employeeController.getEmployeeById(employeeId);
 
         // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(employeeServiceApi).getEmployeeById(employeeId);
     }
 
     @Test
-    void getEmployeeById_EmptyId() {
+    void getEmployeeById_NotFound_ReturnsNotFound() {
+        // Given
+        String employeeId = "123e4567-e89b-12d3-a456-426614174000";
+        when(employeeServiceApi.getEmployeeById(employeeId))
+                .thenReturn(ResponseEntity.notFound().build());
+
         // When
-        ResponseEntity<Employee> response = employeeController.getEmployeeById("");
+        ResponseEntity<Employee> response = employeeController.getEmployeeById(employeeId);
 
         // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
-    }
-
-    @Test
-    void getEmployeeById_InvalidUuidFormat() {
-        // When
-        ResponseEntity<Employee> response = employeeController.getEmployeeById("test-id");
-
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verify(employeeServiceApi).getEmployeeById(employeeId);
     }
 
     @Test
@@ -194,7 +193,7 @@ class EmployeeControllerTest {
     @Test
     void getHighestSalaryOfEmployees_Success() {
         // Given
-        when(employeeServiceApi.getAllEployees()).thenReturn(ResponseEntity.ok(testEmployees));
+        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(testEmployees));
 
         // When
         ResponseEntity<Integer> response = employeeController.getHighestSalaryOfEmployees();
@@ -202,13 +201,13 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(75000, response.getBody()); // Jane's salary is highest
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
     void getHighestSalaryOfEmployees_NoEmployees() {
         // Given
-        when(employeeServiceApi.getAllEployees()).thenReturn(ResponseEntity.ok(Collections.emptyList()));
+        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(Collections.emptyList()));
 
         // When
         ResponseEntity<Integer> response = employeeController.getHighestSalaryOfEmployees();
@@ -216,13 +215,13 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, response.getBody());
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
     void getHighestSalaryOfEmployees_ServiceError() {
         // Given
-        when(employeeServiceApi.getAllEployees())
+        when(employeeServiceApi.getAllEmployees())
                 .thenReturn(ResponseEntity.internalServerError().build());
 
         // When
@@ -231,7 +230,7 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, response.getBody());
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
@@ -239,7 +238,7 @@ class EmployeeControllerTest {
         // Given
         Employee empWithNullSalary = new Employee("3", "Test User", null, 25, "Tester", "test@company.com");
         List<Employee> employeesWithNulls = Arrays.asList(testEmployee1, empWithNullSalary);
-        when(employeeServiceApi.getAllEployees()).thenReturn(ResponseEntity.ok(employeesWithNulls));
+        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(employeesWithNulls));
 
         // When
         ResponseEntity<Integer> response = employeeController.getHighestSalaryOfEmployees();
@@ -247,13 +246,13 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(50000, response.getBody()); // Should ignore null salary
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
     void getTopTenHighestEarningEmployeeNames_Success() {
         // Given
-        when(employeeServiceApi.getAllEployees()).thenReturn(ResponseEntity.ok(testEmployees));
+        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(testEmployees));
 
         // When
         ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();
@@ -264,13 +263,13 @@ class EmployeeControllerTest {
         assertEquals(2, response.getBody().size());
         assertEquals("Jane Smith", response.getBody().get(0)); // Highest salary first
         assertEquals("John Doe", response.getBody().get(1));
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
     void getTopTenHighestEarningEmployeeNames_NoEmployees() {
         // Given
-        when(employeeServiceApi.getAllEployees()).thenReturn(ResponseEntity.ok(Collections.emptyList()));
+        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(Collections.emptyList()));
 
         // When
         ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();
@@ -278,13 +277,13 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(Collections.emptyList(), response.getBody());
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
     void getTopTenHighestEarningEmployeeNames_ServiceError() {
         // Given
-        when(employeeServiceApi.getAllEployees())
+        when(employeeServiceApi.getAllEmployees())
                 .thenReturn(ResponseEntity.internalServerError().build());
 
         // When
@@ -293,7 +292,7 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(Collections.emptyList(), response.getBody());
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
@@ -303,7 +302,7 @@ class EmployeeControllerTest {
         Employee empWithNullName = new Employee("4", null, 60000, 28, "Developer", "dev@company.com");
         List<Employee> employeesWithNulls =
                 Arrays.asList(testEmployee1, testEmployee2, empWithNullSalary, empWithNullName);
-        when(employeeServiceApi.getAllEployees()).thenReturn(ResponseEntity.ok(employeesWithNulls));
+        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(employeesWithNulls));
 
         // When
         ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();
@@ -314,7 +313,7 @@ class EmployeeControllerTest {
         assertEquals(2, response.getBody().size()); // Should filter out null salary and null name
         assertTrue(response.getBody().contains("Jane Smith"));
         assertTrue(response.getBody().contains("John Doe"));
-        verify(employeeServiceApi).getAllEployees();
+        verify(employeeServiceApi).getAllEmployees();
     }
 
     @Test
@@ -399,29 +398,25 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void deleteEmployeeById_NullId() {
+    void deleteEmployeeById_ValidId_Success() {
+        // Given
+        String employeeId = "123e4567-e89b-12d3-a456-426614174000";
+        when(employeeServiceApi.deleteEmployeeById(employeeId))
+                .thenReturn(ResponseEntity.ok(testEmployee1.getEmployeeName()));
+
         // When
-        ResponseEntity<String> response = employeeController.deleteEmployeeById(null);
+        ResponseEntity<String> response = employeeController.deleteEmployeeById(employeeId);
 
         // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
-    }
-
-    @Test
-    void deleteEmployeeById_EmptyId() {
-        // When
-        ResponseEntity<String> response = employeeController.deleteEmployeeById("");
-
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(testEmployee1.getEmployeeName(), response.getBody());
+        verify(employeeServiceApi).deleteEmployeeById(employeeId);
     }
 
     @Test
     void deleteEmployeeById_NotFound() {
         // Given
-        String employeeId = "999";
+        String employeeId = "123e4567-e89b-12d3-a456-426614174000";
         when(employeeServiceApi.deleteEmployeeById(employeeId))
                 .thenReturn(ResponseEntity.notFound().build());
 

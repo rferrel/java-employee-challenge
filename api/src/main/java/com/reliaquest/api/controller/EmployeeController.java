@@ -4,6 +4,7 @@ import com.reliaquest.api.model.Employee;
 import com.reliaquest.api.model.EmployeeInput;
 import com.reliaquest.api.service.EmployeeServiceApi;
 import com.reliaquest.api.util.EmployeeValidation;
+import com.reliaquest.api.validation.ValidUUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +39,8 @@ public class EmployeeController implements IEmployeeController<Employee, Employe
                 @ApiResponse(responseCode = "503", description = "Service temporarily unavailable")
             })
     public ResponseEntity<List<Employee>> getAllEmployees() {
-        // todo: what kind of validation should be done here?
-        // todo
-        return employeeServiceApi.getAllEployees();
+        // No validation required - this endpoint accepts no parameters and always returns all employees
+        return employeeServiceApi.getAllEmployees();
     }
 
     @Override
@@ -75,27 +74,19 @@ public class EmployeeController implements IEmployeeController<Employee, Employe
     @ApiResponses(
             value = {
                 @ApiResponse(responseCode = "200", description = "Successfully retrieved employee"),
+                @ApiResponse(responseCode = "400", description = "Invalid employee ID format"),
                 @ApiResponse(responseCode = "404", description = "Employee not found"),
                 @ApiResponse(responseCode = "503", description = "Service temporarily unavailable")
             })
     public ResponseEntity<Employee> getEmployeeById(
-            @Parameter(description = "Employee ID", example = "123e4567-e89b-12d3-a456-426614174000") String id) {
-        if (id == null || id.isEmpty()) {
-            logger.warn("Employee ID is null or empty");
-            return ResponseEntity.badRequest().build();
-        }
-        try {
-            UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            logger.warn("Invalid UUID format: {}", id);
-            return ResponseEntity.badRequest().build();
-        }
+            @Parameter(description = "Employee ID", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUUID
+                    String id) {
         return employeeServiceApi.getEmployeeById(id);
     }
 
     @Override
     public ResponseEntity<Integer> getHighestSalaryOfEmployees() {
-        ResponseEntity<List<Employee>> response = employeeServiceApi.getAllEployees();
+        ResponseEntity<List<Employee>> response = employeeServiceApi.getAllEmployees();
 
         if (!response.getStatusCode().is2xxSuccessful()
                 || response.getBody() == null
@@ -115,7 +106,7 @@ public class EmployeeController implements IEmployeeController<Employee, Employe
 
     @Override
     public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames() {
-        ResponseEntity<List<Employee>> response = employeeServiceApi.getAllEployees();
+        ResponseEntity<List<Employee>> response = employeeServiceApi.getAllEmployees();
 
         if (!response.getStatusCode().is2xxSuccessful()
                 || response.getBody() == null
@@ -166,12 +157,7 @@ public class EmployeeController implements IEmployeeController<Employee, Employe
     }
 
     @Override
-    public ResponseEntity<String> deleteEmployeeById(String id) {
-        if (id == null || id.isEmpty()) {
-            logger.warn("Employee ID is null or empty for deletion");
-            return ResponseEntity.badRequest().build();
-        }
-
+    public ResponseEntity<String> deleteEmployeeById(@ValidUUID String id) {
         return employeeServiceApi.deleteEmployeeById(id);
     }
 }

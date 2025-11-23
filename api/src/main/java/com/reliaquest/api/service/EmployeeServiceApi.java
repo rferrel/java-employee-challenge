@@ -15,100 +15,81 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class EmployeeServiceApi {
 
     private final Logger logger = LoggerFactory.getLogger(EmployeeServiceApi.class);
     private final EmployeeCache employeeCache;
+    private final RestTemplate restTemplate;
 
     @Value("${mock.api.base-url}")
     private String mockApiBaseUrl;
 
-    public EmployeeServiceApi(EmployeeCache employeeCache) {
+    public EmployeeServiceApi(EmployeeCache employeeCache, RestTemplate restTemplate) {
         this.employeeCache = employeeCache;
+        this.restTemplate = restTemplate;
     }
 
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-get-all", fallbackMethod = "getAllEmployeesFallback")
-    public ResponseEntity<List<Employee>> getAllEployees() {
-        // Check cache first
-        List<Employee> cachedEmployees = employeeCache.getAllEmployees();
-        if (cachedEmployees != null) {
-            logger.debug("Returning cached employees, count: {}", cachedEmployees.size());
-            return ResponseEntity.ok(cachedEmployees);
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        logger.debug("Calling API for all employees");
+
+        ResponseEntity<ApiResponse<List<Employee>>> response = restTemplate.exchange(
+                mockApiBaseUrl, HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<List<Employee>>>() {});
+
+        // Check response status
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            logger.warn("API returned non-success status: {}", response.getStatusCode());
+            throw new RuntimeException("API call failed with status: " + response.getStatusCode());
         }
 
-        // Cache miss - call API
-        logger.debug("Cache miss - calling API for all employees");
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-
-            ResponseEntity<ApiResponse<List<Employee>>> response = restTemplate.exchange(
-                    mockApiBaseUrl,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<ApiResponse<List<Employee>>>() {});
-
-            List<Employee> employees = response.getBody().getData();
-
-            // Cache the result
-            employeeCache.putAllEmployees(employees);
-            logger.debug("Cached {} employees", employees.size());
-
-            return ResponseEntity.ok(employees);
-        } catch (Exception e) {
-            logger.error("Error fetching all employees", e);
-            return ResponseEntity.internalServerError().build();
+        List<Employee> employees = response.getBody().getData();
+        if (employees == null) {
+            logger.warn("API returned null data");
+            employees = List.of();
         }
+
+        // Cache the result
+        employeeCache.putAllEmployees(employees);
+        logger.debug("Cached {} employees", employees.size());
+
+        return ResponseEntity.ok(employees);
     }
 
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-get-by-id", fallbackMethod = "getEmployeeByIdFallback")
     public ResponseEntity<Employee> getEmployeeById(String id) {
-        // Check cache first
-        Employee cachedEmployee = employeeCache.getEmployeeById(id);
-        if (cachedEmployee != null) {
-            logger.debug("Returning cached employee for id: {}", id);
-            return ResponseEntity.ok(cachedEmployee);
-        }
+        logger.debug("Calling API for employee id: {}", id);
+        String url = UriComponentsBuilder.fromHttpUrl(mockApiBaseUrl)
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUriString();
+        ResponseEntity<ApiResponse<Employee>> response = restTemplate.exchange(
+                url, HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<Employee>>() {});
 
-        // Cache miss - call API
-        logger.debug("Cache miss - calling API for employee id: {}", id);
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            String url = mockApiBaseUrl + "/" + id;
-            ResponseEntity<ApiResponse<Employee>> response = restTemplate.exchange(
-                    url, HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<Employee>>() {});
+        if (response.getStatusCode().is2xxSuccessful()
+                && response.getBody() != null
+                && response.getBody().getData() != null) {
+            Employee employee = response.getBody().getData();
 
-            if (response.getStatusCode().is2xxSuccessful()
-                    && response.getBody() != null
-                    && response.getBody().getData() != null) {
-                Employee employee = response.getBody().getData();
+            // Cache the result
+            employeeCache.putEmployeeById(id, employee);
+            logger.debug("Cached employee: {}", employee.getEmployeeName());
 
-                // Cache the result
-                employeeCache.putEmployeeById(id, employee);
-                logger.debug("Cached employee: {}", employee.getEmployeeName());
-
-                return ResponseEntity.ok(employee);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (HttpClientErrorException.NotFound e) {
-            logger.warn("Employee not found with id: {}", id);
+            return ResponseEntity.ok(employee);
+        } else {
             return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            logger.error("Error fetching employee with id: {}", id, e);
-            return ResponseEntity.internalServerError().build();
         }
     }
 
     public ResponseEntity<List<Employee>> getEmployeesByNameSearch(String searchString) {
         try {
             // Use cached getAllEmployees if available, otherwise call API
-            ResponseEntity<List<Employee>> allEmployeesResponse = getAllEployees();
+            ResponseEntity<List<Employee>> allEmployeesResponse = getAllEmployees();
 
             if (!allEmployeesResponse.getStatusCode().is2xxSuccessful() || allEmployeesResponse.getBody() == null) {
                 return ResponseEntity.ok(List.of());
@@ -122,78 +103,87 @@ public class EmployeeServiceApi {
 
             logger.debug("Filtered {} employees for search: '{}'", filteredEmployees.size(), searchString);
             return ResponseEntity.ok(filteredEmployees);
+        } catch (io.github.resilience4j.circuitbreaker.CallNotPermittedException e) {
+            logger.warn("Circuit breaker open while searching employees by name: {}", searchString);
+            return ResponseEntity.status(503).build();
         } catch (Exception e) {
             logger.error("Error searching employees by name: {}", searchString, e);
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.ok(List.of()); // Return empty list on error as graceful degradation
         }
     }
 
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-create", fallbackMethod = "createEmployeeFallback")
     public ResponseEntity<Employee> createEmployee(EmployeeInput employeeInput) {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<ApiResponse<Employee>> response = restTemplate.exchange(
-                    mockApiBaseUrl,
-                    HttpMethod.POST,
-                    new HttpEntity<>(employeeInput),
-                    new ParameterizedTypeReference<ApiResponse<Employee>>() {});
+        logger.debug("Calling API to create employee: {}", employeeInput.getName());
+        ResponseEntity<ApiResponse<Employee>> response = restTemplate.exchange(
+                mockApiBaseUrl,
+                HttpMethod.POST,
+                new HttpEntity<>(employeeInput),
+                new ParameterizedTypeReference<ApiResponse<Employee>>() {});
 
-            if (response.getStatusCode().is2xxSuccessful()
-                    && response.getBody() != null
-                    && response.getBody().getData() != null) {
-                Employee createdEmployee = response.getBody().getData();
+        if (response.getStatusCode().is2xxSuccessful()
+                && response.getBody() != null
+                && response.getBody().getData() != null) {
+            Employee createdEmployee = response.getBody().getData();
 
-                // Invalidate cache since we added a new employee
-                employeeCache.invalidateAll();
-                logger.debug("Cache invalidated after creating employee: {}", createdEmployee.getEmployeeName());
+            // Invalidate cache since we added a new employee
+            employeeCache.invalidateAll();
+            logger.debug("Cache invalidated after creating employee: {}", createdEmployee.getEmployeeName());
 
-                return ResponseEntity.ok(createdEmployee);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } catch (HttpClientErrorException e) {
-            logger.error("Client error when creating employee: {} - {}", e.getStatusCode(), e.getMessage());
-            return ResponseEntity.status(e.getStatusCode()).build();
-        } catch (Exception e) {
-            logger.error("Error creating employee", e);
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.ok(createdEmployee);
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-delete", fallbackMethod = "deleteEmployeeByIdFallback")
     public ResponseEntity<String> deleteEmployeeById(String id) {
-        try {
-            // First get the employee to retrieve the name
-            ResponseEntity<Employee> employeeResponse = getEmployeeById(id);
-            if (!employeeResponse.getStatusCode().is2xxSuccessful() || employeeResponse.getBody() == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            String employeeName = employeeResponse.getBody().getEmployeeName();
-
-            // Delete using employee name (as per API spec)
-            RestTemplate restTemplate = new RestTemplate();
-            String deleteUrl = mockApiBaseUrl + "/" + employeeName;
-            ResponseEntity<ApiResponse<Boolean>> response = restTemplate.exchange(
-                    deleteUrl, HttpMethod.DELETE, null, new ParameterizedTypeReference<ApiResponse<Boolean>>() {});
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                // Invalidate cache since we deleted an employee
-                employeeCache.invalidateEmployee(id);
-                logger.debug("Cache invalidated after deleting employee: {}", employeeName);
-
-                return ResponseEntity.ok(employeeName);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } catch (HttpClientErrorException.NotFound e) {
-            logger.warn("Employee not found for deletion with id: {}", id);
+        logger.debug("Calling API to delete employee with id: {}", id);
+        // Fetch employee name directly from API (without circuit breaker)
+        String employeeName = fetchEmployeeNameById(id);
+        if (employeeName == null) {
+            logger.warn("Employee not found with id: {}", id);
             return ResponseEntity.notFound().build();
+        }
+
+        // Delete using employee name (as per API spec)
+        String deleteUrl = UriComponentsBuilder.fromHttpUrl(mockApiBaseUrl)
+                .path("/{name}")
+                .buildAndExpand(employeeName)
+                .toUriString();
+        ResponseEntity<ApiResponse<Boolean>> response = restTemplate.exchange(
+                deleteUrl, HttpMethod.DELETE, null, new ParameterizedTypeReference<ApiResponse<Boolean>>() {});
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            // Invalidate both individual employee and all employees cache
+            employeeCache.invalidateEmployee(id);
+            logger.debug("Cache invalidated after deleting employee: {}", employeeName);
+
+            return ResponseEntity.ok(employeeName);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    private String fetchEmployeeNameById(String id) {
+        try {
+            String url = UriComponentsBuilder.fromHttpUrl(mockApiBaseUrl)
+                    .path("/{id}")
+                    .buildAndExpand(id)
+                    .toUriString();
+            ResponseEntity<ApiResponse<Employee>> response = restTemplate.exchange(
+                    url, HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<Employee>>() {});
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                Employee employee = response.getBody().getData();
+                return employee != null ? employee.getEmployeeName() : null;
+            }
+            return null;
         } catch (Exception e) {
-            logger.error("Error deleting employee with id: {}", id, e);
-            return ResponseEntity.internalServerError().build();
+            logger.error("Error fetching employee name for id: {}", id, e);
+            return null;
         }
     }
 

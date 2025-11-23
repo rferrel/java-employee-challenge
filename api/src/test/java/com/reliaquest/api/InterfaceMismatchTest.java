@@ -2,6 +2,7 @@ package com.reliaquest.api;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -9,7 +10,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * Tests for @ValidUUID annotation integration tests. These require a running API instance with mock
+ * server. Disabled by default. To run: 1. Start mock server: ./gradlew server:bootRun 2. Run tests:
+ * ./gradlew test --tests InterfaceMismatchTest
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Disabled("Requires mock server running on port 8112")
 class InterfaceMismatchTest {
 
     @LocalServerPort

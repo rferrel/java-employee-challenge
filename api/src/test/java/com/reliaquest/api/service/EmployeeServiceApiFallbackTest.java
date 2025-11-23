@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceApiFallbackTest {
@@ -21,11 +22,14 @@ class EmployeeServiceApiFallbackTest {
     @Mock
     private EmployeeCache employeeCache;
 
+    @Mock
+    private RestTemplate mockRestTemplate;
+
     private EmployeeServiceApi employeeServiceApi;
 
     @BeforeEach
     void setUp() {
-        employeeServiceApi = new EmployeeServiceApi(employeeCache);
+        employeeServiceApi = new EmployeeServiceApi(employeeCache, mockRestTemplate);
     }
 
     @Test

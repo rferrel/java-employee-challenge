@@ -21,7 +21,7 @@ public class CachePreloader implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         logger.info("Preloading cache on startup...");
         try {
-            employeeServiceApi.getAllEployees();
+            employeeServiceApi.getAllEmployees();
             logger.info("Cache preloaded successfully");
         } catch (Exception e) {
             logger.warn("Failed to preload cache on startup: {}", e.getMessage());
