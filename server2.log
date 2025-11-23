@@ -1,0 +1,97 @@
+> Task :buildSrc:extractPluginRequests UP-TO-DATE
+> Task :buildSrc:generatePluginAdapters UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy NO-SOURCE
+> Task :buildSrc:compileGroovyPlugins UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+> Task :buildSrc:assemble UP-TO-DATE
+> Task :buildSrc:compileTestJava NO-SOURCE
+> Task :buildSrc:compileTestGroovy NO-SOURCE
+> Task :buildSrc:pluginUnderTestMetadata UP-TO-DATE
+> Task :buildSrc:processTestResources NO-SOURCE
+> Task :buildSrc:testClasses UP-TO-DATE
+> Task :buildSrc:test NO-SOURCE
+> Task :buildSrc:validatePlugins UP-TO-DATE
+> Task :buildSrc:check UP-TO-DATE
+> Task :buildSrc:build UP-TO-DATE
+> Task :server:compileJava UP-TO-DATE
+> Task :server:processResources UP-TO-DATE
+> Task :server:classes UP-TO-DATE
+> Task :server:resolveMainClassName UP-TO-DATE
+
+> Task :server:bootRun
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v3.2.10)
+
+2025-11-19T15:01:52.945-07:00  INFO 70276 --- [mock-employee-api] [           main] c.reliaquest.server.ServerApplication    : Starting ServerApplication using Java 17.0.17 with PID 70276 (/Users/rferrel/git_projects/java-employee-challenge/server/build/classes/java/main started by rferrel in /Users/rferrel/git_projects/java-employee-challenge/server)
+2025-11-19T15:01:52.946-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.reliaquest.server.ServerApplication    : Running with Spring Boot v3.2.10, Spring v6.1.13
+2025-11-19T15:01:52.946-07:00  INFO 70276 --- [mock-employee-api] [           main] c.reliaquest.server.ServerApplication    : No active profile set, falling back to 1 default profile: "default"
+2025-11-19T15:01:53.246-07:00  INFO 70276 --- [mock-employee-api] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8112 (http)
+2025-11-19T15:01:53.251-07:00  INFO 70276 --- [mock-employee-api] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-19T15:01:53.251-07:00  INFO 70276 --- [mock-employee-api] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-11-19T15:01:53.270-07:00  INFO 70276 --- [mock-employee-api] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-19T15:01:53.270-07:00  INFO 70276 --- [mock-employee-api] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 308 ms
+2025-11-19T15:01:53.669-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=0c31007b-3d74-4d28-9b4b-a5d453516b5b, name=Aubrey Cassin V, salary=40461, age=61, title=Advertising Analyst, email=sub-ex@company.com)
+2025-11-19T15:01:53.671-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=e8f800f4-51d3-4a3c-893d-e1cb18d366cd, name=Kenneth Maggio, salary=94704, age=29, title=Marketing Technician, email=bitwolf@company.com)
+2025-11-19T15:01:53.672-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=332f3d15-d04f-41bc-85c1-eff6de7dedd6, name=Miss Larissa Veum, salary=301462, age=51, title=Construction Strategist, email=latlux@company.com)
+2025-11-19T15:01:53.672-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=3c112909-54be-4282-a83e-d1a9247adffe, name=Lorretta McLaughlin, salary=54288, age=25, title=Global Planner, email=zathin@company.com)
+2025-11-19T15:01:53.672-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=84366889-b9ba-421b-a78e-93e780205958, name=Ila Dickens, salary=451632, age=23, title=Global Strategist, email=ventosanzap@company.com)
+2025-11-19T15:01:53.672-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=ea4e80c8-b3a1-48c8-87bf-6c6dbc03817b, name=Carmine McCullough, salary=382309, age=61, title=Regional Consulting Planner, email=tempsoft@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=81c2f9bf-12d4-4fe8-8217-24631637ea0d, name=Ernesto Schmeler, salary=199059, age=16, title=Product Administration Designer, email=zontrax@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=cca69462-3f49-48ce-8b82-b23d88846dd0, name=Winford VonRueden, salary=305433, age=37, title=Global Real-Estate Architect, email=veribet@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=0939e133-b3bd-494a-917f-4251ac8f138a, name=Fallon Kreiger, salary=210020, age=26, title=Legal Supervisor, email=pannier@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=4c205988-18af-482a-98bc-4b75b98caf43, name=Alden Marquardt, salary=88601, age=31, title=Senior Consulting Specialist, email=keepitdope_joe@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=f8432461-c0b4-4a04-b2a4-f015451899cd, name=Karl Sporer, salary=424493, age=42, title=Chief Design Manager, email=alpha@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=ce90e9f0-a95b-4d4e-9d45-a47915d8261d, name=Keren Bechtelar, salary=108825, age=28, title=Internal Legal Facilitator, email=ronstring@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=eb0e071c-53fa-4174-88ad-d3030e073b40, name=Blake Spinka, salary=368489, age=44, title=Farming Consultant, email=stim@company.com)
+2025-11-19T15:01:53.673-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=aabc1a7e-6e89-4fcd-beac-ed3f03a03ff8, name=Ms. Cole Hoeger, salary=461321, age=28, title=Internal Education Technician, email=vagram@company.com)
+2025-11-19T15:01:53.674-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=c54a3dc7-0613-41c7-a914-a8f958a8e5c8, name=Miss Richie Murazik, salary=287834, age=55, title=Banking Developer, email=ventosanzap@company.com)
+2025-11-19T15:01:53.674-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=c50eff8f-2884-4aed-a8bc-d5a62aa22de4, name=Dr. Nigel Lakin, salary=91033, age=32, title=National Education Specialist, email=andalax@company.com)
+2025-11-19T15:01:53.674-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=93df7eb8-fe55-49cc-8a70-edec97e296e0, name=Lisette Sipes, salary=205501, age=30, title=Forward Manufacturing Technician, email=voyatouch@company.com)
+2025-11-19T15:01:53.674-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=dd5e61bd-4a5b-4b8a-b10d-07cd13527053, name=Mrs. Rupert Pouros, salary=435785, age=21, title=Dynamic Farming Associate, email=hatity@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=b1e40f68-26f5-4cac-8e35-a519ce2e1f4d, name=Miss Arlen Jast, salary=244952, age=24, title=Product Construction Developer, email=alpha@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=388a3b54-29c4-45eb-a425-f889d94e5a66, name=Willie Kiehn Sr., salary=32184, age=33, title=Regional Farming Officer, email=tututulip@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=5ac576ce-041a-4aa3-bee8-0207ad87cf24, name=Sam Hoeger MD, salary=264248, age=33, title=Internal Healthcare Liaison, email=opela@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=653c5a9e-f055-467c-8ee7-dee941257525, name=Pete Kreiger, salary=495539, age=55, title=Forward Education Designer, email=lotstring@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=df5dce49-3337-459c-8509-8186c5b46233, name=Ossie Berge, salary=359875, age=45, title=Product Director, email=teejay_thompson@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=583f1b8f-8ca5-4f6c-9822-cfc94a6cf49d, name=Joanne White I, salary=135592, age=35, title=Investor Associate, email=sheilababy@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=ae86ad75-5c51-4158-81de-f5796462682a, name=Morris Halvorson I, salary=257364, age=19, title=Central Legal Orchestrator, email=alpha@company.com)
+2025-11-19T15:01:53.675-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=369484f8-4715-48be-b193-fd22cd880563, name=Saul Stroman, salary=33295, age=57, title=Marketing Supervisor, email=imdahdude@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=3a1694c8-1496-4a19-8f42-904064b04388, name=Barrett Upton, salary=128210, age=19, title=International Hospitality Associate, email=lotstring@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=967834f6-f4a4-416d-a9a6-3fb864768d03, name=Jim Wiegand, salary=454200, age=34, title=Government Architect, email=domainer@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=de7d27a1-4a7a-43f1-a939-8e13b5bb3ec7, name=Janina Goyette Sr., salary=121321, age=25, title=Principal Consulting Developer, email=regrant@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=d800d1a0-a3d2-4ff6-96fc-2e20e3f2b8ed, name=Donnette Hill, salary=284334, age=37, title=Customer Design Designer, email=fixflex@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=eec69ba9-b0a1-41cd-80e4-5fe6ceec6760, name=Elmo Mertz, salary=468009, age=54, title=Investor Sales Liaison, email=fintone@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=df9c2a0d-e26c-42b8-8155-792cf80f3718, name=Henry Huel PhD, salary=267748, age=39, title=District Administration Strategist, email=tututulip@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=7f8cd040-52a7-4546-96cd-7a91cbd68854, name=John Tremblay V, salary=33199, age=32, title=Lead Designer, email=bitwolf@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=f53ffe9d-8ea8-43ba-be6f-be1b0e218cc0, name=Edwardo Bruen PhD, salary=185644, age=16, title=Marketing Officer, email=holdlamis@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=4d8d20a0-f1e5-4055-bc3d-450947709d87, name=Carmina Lind, salary=183545, age=65, title=National Community-Services Consultant, email=domainer@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=0c065250-3fd2-4e7a-b712-51f4fdccb0e6, name=Hilton Orn Jr., salary=359303, age=53, title=Lead Legal Facilitator, email=domainer@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=44243204-2274-4246-97b6-e56b0f03bf19, name=Jerri Brakus, salary=68612, age=54, title=International Architect, email=quolux@company.com)
+2025-11-19T15:01:53.676-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=0fde185f-f6d8-4cc1-a62f-88c222f222d2, name=Zackary Gusikowski, salary=41870, age=24, title=Education Orchestrator, email=namfix@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=206d1569-02ba-4d55-8daa-e7795581f89f, name=Broderick Hudson, salary=458742, age=66, title=Customer Education Officer, email=zathin@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=99c4f216-f4d0-4335-afbe-5d70ff372011, name=Miss Latasha Wuckert, salary=217859, age=26, title=Global Education Orchestrator, email=livlaughlo@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=fd119212-56fe-4809-964f-516fe60d0851, name=Merlin Gulgowski, salary=314173, age=46, title=Future Consultant, email=stronghold@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=ed24c26f-9860-43fb-8665-6d7852b9ba84, name=Bob Hills, salary=451349, age=68, title=Retail Architect, email=pannier@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=c4aaf5e2-0312-43f2-ae40-ebd90c2a24b2, name=Dr. Bernard Kiehn, salary=47616, age=17, title=Construction Executive, email=magik_mike@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=a6fa3393-23ac-41e8-a4d7-83538aff8009, name=Annice Keebler, salary=321978, age=42, title=National Advertising Orchestrator, email=sonsing@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=0759d8f6-cc25-4fe2-acd7-917b8c4c2ec8, name=Gale Blick, salary=388879, age=35, title=Construction Engineer, email=fixsan@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=800d7257-e41e-4b39-bd42-3ad8ed2cffd3, name=Asa Roberts, salary=246531, age=64, title=Legal Designer, email=sheilababy@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=a88d20d3-e0bb-471b-9e85-735f041919b9, name=Alexandria Dickens, salary=174377, age=17, title=Lead Design Facilitator, email=stronghold@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=37facbce-5e49-4a8d-9816-dd91f8297e6a, name=Mr. Ozzie Williamson, salary=90274, age=43, title=Human Healthcare Representative, email=aerified@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=11bfc0a9-ae3a-4893-b161-8b034e8b5385, name=Cathy Zulauf, salary=341857, age=53, title=Chief Real-Estate Designer, email=alphazap@company.com)
+2025-11-19T15:01:53.677-07:00 DEBUG 70276 --- [mock-employee-api] [           main] c.r.server.config.ServerConfiguration    : Created employee: MockEmployee(id=81782ed7-53c5-4276-9407-4bd6a7f8009b, name=Willian Watsica, salary=183351, age=69, title=International Hospitality Consultant, email=sonsing@company.com)
+2025-11-19T15:01:53.777-07:00  INFO 70276 --- [mock-employee-api] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8112 (http) with context path ''
+2025-11-19T15:01:53.781-07:00  INFO 70276 --- [mock-employee-api] [           main] c.reliaquest.server.ServerApplication    : Started ServerApplication in 0.997 seconds (process running for 1.101)
+2025-11-19T15:02:05.212-07:00  INFO 70276 --- [mock-employee-api] [nio-8112-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-19T15:02:05.212-07:00  INFO 70276 --- [mock-employee-api] [nio-8112-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-19T15:02:05.213-07:00  INFO 70276 --- [mock-employee-api] [nio-8112-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms

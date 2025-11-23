@@ -1,11 +1,26 @@
 plugins {
     id 'project-conventions'
+    id 'jacoco'
 }
 
 dependencies {
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 springBoot {
     mainClass = 'com.reliaquest.api.ApiApplication'
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }

@@ -1,7 +1,18 @@
-logging.level.com.reliaquest: DEBUG
 spring.application.name: mock-employee-api
 server:
   port: 8112
   compression:
     enabled: true
+
 mock.employees.max: 50
+
+logging:
+  level:
+    com.reliaquest: DEBUG
+    org.springframework: INFO
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/server.log

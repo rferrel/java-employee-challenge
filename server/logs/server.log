@@ -1,0 +1,182 @@
+2025-11-23 09:00:40 [http-nio-8112-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee", parameters={}
+2025-11-23 09:00:40 [http-nio-8112-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployees()
+2025-11-23 09:00:40 [http-nio-8112-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-23 09:00:40 [http-nio-8112-exec-8] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Response[data=[MockEmployee(id=cc60970f-2052-4f60-ae5e-d6e922d2d4c2, name=Idella Will, salary=119517 (truncated)...]
+2025-11-23 09:00:40 [http-nio-8112-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployees()
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Writing [Response[data=[MockEmployee(id=cc60970f-2052-4f60-ae5e-d6e922d2d4c2, name=Idella Will, salary=119517 (truncated)...]
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2025-11-23 09:00:41 [http-nio-8112-exec-15] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/123e4567-e89b-12d3-a456-426614174000", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-15] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-15] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-23 09:00:41 [http-nio-8112-exec-15] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [Response[data=null, status=HANDLED, error=null]]
+2025-11-23 09:00:41 [http-nio-8112-exec-15] DEBUG o.s.web.servlet.DispatcherServlet - Completed 404 NOT_FOUND
+2025-11-23 09:00:41 [http-nio-8112-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/123e4567-e89b-12d3-a456-426614174000", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-7] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-23 09:00:41 [http-nio-8112-exec-7] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [Response[data=null, status=HANDLED, error=null]]
+2025-11-23 09:00:41 [http-nio-8112-exec-7] DEBUG o.s.web.servlet.DispatcherServlet - Completed 404 NOT_FOUND
+2025-11-23 09:00:41 [http-nio-8112-exec-12] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/123e4567-e89b-12d3-a456-426614174000", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-12] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-12] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-23 09:00:41 [http-nio-8112-exec-12] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [Response[data=null, status=HANDLED, error=null]]
+2025-11-23 09:00:41 [http-nio-8112-exec-12] DEBUG o.s.web.servlet.DispatcherServlet - Completed 404 NOT_FOUND
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/employee-123", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.web.method.HandlerMethod - Could not resolve parameter [0] in public org.springframework.http.ResponseEntity<com.reliaquest.server.model.Response<com.reliaquest.server.model.MockEmployee>> com.reliaquest.server.controller.MockEmployeeController.getEmployee(java.util.UUID): Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: employee-123
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Using @ExceptionHandler com.reliaquest.server.controller.MockEmployeeControllerAdvice#handleException(Throwable)
+2025-11-23 09:00:41 [http-nio-8112-exec-3] ERROR c.r.s.c.MockEmployeeControllerAdvice - Error handling web request.
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: employee-123
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:302)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:137)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:178)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.IllegalArgumentException: Invalid UUID string: employee-123
+	at java.base/java.util.UUID.fromString1(UUID.java:280)
+	at java.base/java.util.UUID.fromString(UUID.java:258)
+	at org.springframework.beans.propertyeditors.UUIDEditor.setAsText(UUIDEditor.java:37)
+	at org.springframework.beans.TypeConverterDelegate.doConvertTextValue(TypeConverterDelegate.java:439)
+	at org.springframework.beans.TypeConverterDelegate.doConvertValue(TypeConverterDelegate.java:412)
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:161)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:80)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53)
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:860)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:294)
+	... 48 common frames omitted
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [Response[data=null, status=ERROR, error=Failed to convert value of type 'java.lang.String' to requir (truncated)...]
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: employee-123]
+2025-11-23 09:00:41 [http-nio-8112-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - Completed 500 INTERNAL_SERVER_ERROR
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/null", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.web.method.HandlerMethod - Could not resolve parameter [0] in public org.springframework.http.ResponseEntity<com.reliaquest.server.model.Response<com.reliaquest.server.model.MockEmployee>> com.reliaquest.server.controller.MockEmployeeController.getEmployee(java.util.UUID): Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: null
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Using @ExceptionHandler com.reliaquest.server.controller.MockEmployeeControllerAdvice#handleException(Throwable)
+2025-11-23 09:00:41 [http-nio-8112-exec-4] ERROR c.r.s.c.MockEmployeeControllerAdvice - Error handling web request.
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: null
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:302)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:137)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:224)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:178)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.IllegalArgumentException: Invalid UUID string: null
+	at java.base/java.util.UUID.fromString1(UUID.java:280)
+	at java.base/java.util.UUID.fromString(UUID.java:258)
+	at org.springframework.beans.propertyeditors.UUIDEditor.setAsText(UUIDEditor.java:37)
+	at org.springframework.beans.TypeConverterDelegate.doConvertTextValue(TypeConverterDelegate.java:439)
+	at org.springframework.beans.TypeConverterDelegate.doConvertValue(TypeConverterDelegate.java:412)
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:161)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:80)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53)
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:860)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:294)
+	... 48 common frames omitted
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [application/json, application/*+json] and supported [application/json, application/*+json]
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [Response[data=null, status=ERROR, error=Failed to convert value of type 'java.lang.String' to requir (truncated)...]
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: null]
+2025-11-23 09:00:41 [http-nio-8112-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - Completed 500 INTERNAL_SERVER_ERROR
+2025-11-23 09:00:41 [http-nio-8112-exec-22] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/v1/employee", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-22] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#createEmployee(CreateMockEmployeeInput)
+2025-11-23 09:00:41 [http-nio-8112-exec-22] DEBUG o.s.web.servlet.DispatcherServlet - Completed 429 TOO_MANY_REQUESTS
+2025-11-23 09:00:41 [http-nio-8112-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/null", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - Completed 429 TOO_MANY_REQUESTS
+2025-11-23 09:00:41 [http-nio-8112-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/test-employee-id", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-10] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-10] DEBUG o.s.web.servlet.DispatcherServlet - Completed 429 TOO_MANY_REQUESTS
+2025-11-23 09:00:41 [http-nio-8112-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/v1/employee/test-id", parameters={}
+2025-11-23 09:00:41 [http-nio-8112-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#getEmployee(UUID)
+2025-11-23 09:00:41 [http-nio-8112-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - Completed 429 TOO_MANY_REQUESTS
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.web.servlet.DispatcherServlet - POST "/api/v1/employee", parameters={masked}
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.reliaquest.server.controller.MockEmployeeController#createEmployee(CreateMockEmployeeInput)
+2025-11-23 09:00:41 [http-nio-8112-exec-16] DEBUG o.s.web.servlet.DispatcherServlet - Completed 429 TOO_MANY_REQUESTS

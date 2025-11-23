@@ -1,2 +1,53 @@
 spring.application.name: employee-api
 server.port: 8111
+
+mock:
+  api:
+    base-url: http://localhost:8112/api/v1/employee
+
+resilience4j:
+  retry:
+    instances:
+      employee-api:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - org.springframework.web.client.ResourceAccessException
+  circuitbreaker:
+    configs:
+      default:
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 5000
+        permitted-number-of-calls-in-half-open-state: 10
+        max-wait-duration-in-half-open-state: 10s
+        sliding-window-size: 100
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state: 30s
+        ignore-exceptions:
+          - org.springframework.web.client.HttpClientErrorException.BadRequest
+          - org.springframework.web.client.HttpClientErrorException.NotFound
+    instances:
+      employee-api-get-all:
+        base-config: default
+      employee-api-get-by-id:
+        base-config: default
+      employee-api-create:
+        base-config: default
+        failure-rate-threshold: 60
+      employee-api-delete:
+        base-config: default
+        failure-rate-threshold: 60
+
+logging:
+  level:
+    com.reliaquest: DEBUG
+    org.springframework: INFO
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/api.log
