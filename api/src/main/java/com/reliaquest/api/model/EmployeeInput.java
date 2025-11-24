@@ -9,12 +9,10 @@ public class EmployeeInput {
     @NotBlank(message = "Employee name cannot be null or empty")
     private String name;
 
-    @NotNull(message = "Employee salary cannot be null")
-    @Min(value = 1, message = "Employee salary must be greater than 0")
+    @NotNull(message = "Employee salary cannot be null") @Min(value = 1, message = "Employee salary must be greater than 0")
     private Integer salary;
 
-    @NotNull(message = "Employee age cannot be null")
-    @Min(value = 16, message = "Employee age must be at least 16")
+    @NotNull(message = "Employee age cannot be null") @Min(value = 16, message = "Employee age must be at least 16")
     @Max(value = 75, message = "Employee age must be at most 75")
     private Integer age;
 

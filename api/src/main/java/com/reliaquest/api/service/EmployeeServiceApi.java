@@ -116,7 +116,9 @@ public class EmployeeServiceApi {
     public ResponseEntity<Integer> getHighestSalaryOfEmployees() {
         ResponseEntity<List<Employee>> response = getAllEmployees();
 
-        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null || response.getBody().isEmpty()) {
+        if (!response.getStatusCode().is2xxSuccessful()
+                || response.getBody() == null
+                || response.getBody().isEmpty()) {
             logger.warn("No employees found or error retrieving employees");
             return ResponseEntity.ok(0);
         }
@@ -140,7 +142,9 @@ public class EmployeeServiceApi {
     public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames() {
         ResponseEntity<List<Employee>> response = getAllEmployees();
 
-        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null || response.getBody().isEmpty()) {
+        if (!response.getStatusCode().is2xxSuccessful()
+                || response.getBody() == null
+                || response.getBody().isEmpty()) {
             logger.warn("No employees found or error retrieving employees");
             return ResponseEntity.ok(List.of());
         }

@@ -715,8 +715,8 @@ class EmployeeServiceApiTest {
     @Test
     void getHighestSalaryOfEmployeesFallback_ReturnsZero() {
         // When
-        ResponseEntity<Integer> response = employeeServiceApi.getHighestSalaryOfEmployeesFallback(
-                new Exception("Circuit breaker open"));
+        ResponseEntity<Integer> response =
+                employeeServiceApi.getHighestSalaryOfEmployeesFallback(new Exception("Circuit breaker open"));
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -832,8 +832,8 @@ class EmployeeServiceApiTest {
     @Test
     void getTopTenHighestEarningEmployeeNamesFallback_ReturnsEmptyList() {
         // When
-        ResponseEntity<List<String>> response = employeeServiceApi.getTopTenHighestEarningEmployeeNamesFallback(
-                new Exception("Circuit breaker open"));
+        ResponseEntity<List<String>> response =
+                employeeServiceApi.getTopTenHighestEarningEmployeeNamesFallback(new Exception("Circuit breaker open"));
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());

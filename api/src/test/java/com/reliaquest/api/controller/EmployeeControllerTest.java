@@ -222,8 +222,7 @@ class EmployeeControllerTest {
     void getTopTenHighestEarningEmployeeNames_Success() {
         // Given
         List<String> topTenNames = Arrays.asList("Jane Smith", "John Doe");
-        when(employeeServiceApi.getTopTenHighestEarningEmployeeNames())
-                .thenReturn(ResponseEntity.ok(topTenNames));
+        when(employeeServiceApi.getTopTenHighestEarningEmployeeNames()).thenReturn(ResponseEntity.ok(topTenNames));
 
         // When
         ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();

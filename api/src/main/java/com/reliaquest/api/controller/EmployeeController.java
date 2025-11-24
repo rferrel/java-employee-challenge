@@ -4,7 +4,7 @@ import com.reliaquest.api.model.Employee;
 import com.reliaquest.api.model.EmployeeInput;
 import com.reliaquest.api.service.EmployeeServiceApi;
 import com.reliaquest.api.util.EmployeeValidation;
-import com.reliaquest.api.validation.ValidUUID;
+import com.reliaquest.api.util.EmployeeValidation.ValidUUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -86,21 +86,50 @@ public class EmployeeController implements IEmployeeController<Employee, Employe
     }
 
     @Override
+    @Operation(summary = "Get highest salary", description = "Retrieves the highest salary among all employees")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successfully retrieved highest salary"),
+                @ApiResponse(responseCode = "503", description = "Service temporarily unavailable")
+            })
     public ResponseEntity<Integer> getHighestSalaryOfEmployees() {
         return employeeServiceApi.getHighestSalaryOfEmployees();
     }
 
     @Override
+    @Operation(
+            summary = "Get top 10 highest earning employees",
+            description = "Retrieves the names of the top 10 highest earning employees")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successfully retrieved top 10 employees"),
+                @ApiResponse(responseCode = "503", description = "Service temporarily unavailable")
+            })
     public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames() {
         return employeeServiceApi.getTopTenHighestEarningEmployeeNames();
     }
 
     @Override
+    @Operation(summary = "Create employee", description = "Creates a new employee in the system")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successfully created employee"),
+                @ApiResponse(responseCode = "400", description = "Invalid employee input - validation failed"),
+                @ApiResponse(responseCode = "503", description = "Service temporarily unavailable")
+            })
     public ResponseEntity<Employee> createEmployee(@Valid EmployeeInput employeeInput) {
         return employeeServiceApi.createEmployee(employeeInput);
     }
 
     @Override
+    @Operation(summary = "Delete employee by ID", description = "Deletes an employee by their unique ID")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Successfully deleted employee"),
+                @ApiResponse(responseCode = "400", description = "Invalid employee ID format"),
+                @ApiResponse(responseCode = "404", description = "Employee not found"),
+                @ApiResponse(responseCode = "503", description = "Service temporarily unavailable")
+            })
     public ResponseEntity<String> deleteEmployeeById(@ValidUUID String id) {
         return employeeServiceApi.deleteEmployeeById(id);
     }
