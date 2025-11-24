@@ -193,21 +193,21 @@ class EmployeeControllerTest {
     @Test
     void getHighestSalaryOfEmployees_Success() {
         // Given
-        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(testEmployees));
+        when(employeeServiceApi.getHighestSalaryOfEmployees()).thenReturn(ResponseEntity.ok(75000));
 
         // When
         ResponseEntity<Integer> response = employeeController.getHighestSalaryOfEmployees();
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(75000, response.getBody()); // Jane's salary is highest
-        verify(employeeServiceApi).getAllEmployees();
+        assertEquals(75000, response.getBody());
+        verify(employeeServiceApi).getHighestSalaryOfEmployees();
     }
 
     @Test
     void getHighestSalaryOfEmployees_NoEmployees() {
         // Given
-        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(Collections.emptyList()));
+        when(employeeServiceApi.getHighestSalaryOfEmployees()).thenReturn(ResponseEntity.ok(0));
 
         // When
         ResponseEntity<Integer> response = employeeController.getHighestSalaryOfEmployees();
@@ -215,44 +215,15 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, response.getBody());
-        verify(employeeServiceApi).getAllEmployees();
-    }
-
-    @Test
-    void getHighestSalaryOfEmployees_ServiceError() {
-        // Given
-        when(employeeServiceApi.getAllEmployees())
-                .thenReturn(ResponseEntity.internalServerError().build());
-
-        // When
-        ResponseEntity<Integer> response = employeeController.getHighestSalaryOfEmployees();
-
-        // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(0, response.getBody());
-        verify(employeeServiceApi).getAllEmployees();
-    }
-
-    @Test
-    void getHighestSalaryOfEmployees_NullSalaries() {
-        // Given
-        Employee empWithNullSalary = new Employee("3", "Test User", null, 25, "Tester", "test@company.com");
-        List<Employee> employeesWithNulls = Arrays.asList(testEmployee1, empWithNullSalary);
-        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(employeesWithNulls));
-
-        // When
-        ResponseEntity<Integer> response = employeeController.getHighestSalaryOfEmployees();
-
-        // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(50000, response.getBody()); // Should ignore null salary
-        verify(employeeServiceApi).getAllEmployees();
+        verify(employeeServiceApi).getHighestSalaryOfEmployees();
     }
 
     @Test
     void getTopTenHighestEarningEmployeeNames_Success() {
         // Given
-        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(testEmployees));
+        List<String> topTenNames = Arrays.asList("Jane Smith", "John Doe");
+        when(employeeServiceApi.getTopTenHighestEarningEmployeeNames())
+                .thenReturn(ResponseEntity.ok(topTenNames));
 
         // When
         ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();
@@ -263,13 +234,14 @@ class EmployeeControllerTest {
         assertEquals(2, response.getBody().size());
         assertEquals("Jane Smith", response.getBody().get(0)); // Highest salary first
         assertEquals("John Doe", response.getBody().get(1));
-        verify(employeeServiceApi).getAllEmployees();
+        verify(employeeServiceApi).getTopTenHighestEarningEmployeeNames();
     }
 
     @Test
     void getTopTenHighestEarningEmployeeNames_NoEmployees() {
         // Given
-        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(Collections.emptyList()));
+        when(employeeServiceApi.getTopTenHighestEarningEmployeeNames())
+                .thenReturn(ResponseEntity.ok(Collections.emptyList()));
 
         // When
         ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();
@@ -277,43 +249,21 @@ class EmployeeControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(Collections.emptyList(), response.getBody());
-        verify(employeeServiceApi).getAllEmployees();
+        verify(employeeServiceApi).getTopTenHighestEarningEmployeeNames();
     }
 
     @Test
     void getTopTenHighestEarningEmployeeNames_ServiceError() {
         // Given
-        when(employeeServiceApi.getAllEmployees())
-                .thenReturn(ResponseEntity.internalServerError().build());
+        when(employeeServiceApi.getTopTenHighestEarningEmployeeNames())
+                .thenReturn(ResponseEntity.status(503).build());
 
         // When
         ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();
 
         // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(Collections.emptyList(), response.getBody());
-        verify(employeeServiceApi).getAllEmployees();
-    }
-
-    @Test
-    void getTopTenHighestEarningEmployeeNames_WithNullValues() {
-        // Given
-        Employee empWithNullSalary = new Employee("3", "Test User", null, 25, "Tester", "test@company.com");
-        Employee empWithNullName = new Employee("4", null, 60000, 28, "Developer", "dev@company.com");
-        List<Employee> employeesWithNulls =
-                Arrays.asList(testEmployee1, testEmployee2, empWithNullSalary, empWithNullName);
-        when(employeeServiceApi.getAllEmployees()).thenReturn(ResponseEntity.ok(employeesWithNulls));
-
-        // When
-        ResponseEntity<List<String>> response = employeeController.getTopTenHighestEarningEmployeeNames();
-
-        // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(2, response.getBody().size()); // Should filter out null salary and null name
-        assertTrue(response.getBody().contains("Jane Smith"));
-        assertTrue(response.getBody().contains("John Doe"));
-        verify(employeeServiceApi).getAllEmployees();
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
+        verify(employeeServiceApi).getTopTenHighestEarningEmployeeNames();
     }
 
     @Test
@@ -333,52 +283,19 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void createEmployee_NullInput() {
-        // When
-        ResponseEntity<Employee> response = employeeController.createEmployee(null);
-
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
-    }
-
-    @Test
-    void createEmployee_InvalidName() {
+    void createEmployee_ValidInput_CallsService() {
         // Given
-        EmployeeInput employeeInput = new EmployeeInput("", 60000, 28, "Tester");
+        EmployeeInput employeeInput = new EmployeeInput("Test User", 60000, 28, "Tester");
+        Employee createdEmployee = new Employee("new-id", "Test User", 60000, 28, "Tester", "test@company.com");
+        when(employeeServiceApi.createEmployee(employeeInput)).thenReturn(ResponseEntity.ok(createdEmployee));
 
         // When
         ResponseEntity<Employee> response = employeeController.createEmployee(employeeInput);
 
         // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
-    }
-
-    @Test
-    void createEmployee_InvalidSalary() {
-        // Given
-        EmployeeInput employeeInput = new EmployeeInput("Test User", -1000, 28, "Tester");
-
-        // When
-        ResponseEntity<Employee> response = employeeController.createEmployee(employeeInput);
-
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
-    }
-
-    @Test
-    void createEmployee_InvalidAge() {
-        // Given
-        EmployeeInput employeeInput = new EmployeeInput("Test User", 60000, 15, "Tester");
-
-        // When
-        ResponseEntity<Employee> response = employeeController.createEmployee(employeeInput);
-
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verifyNoInteractions(employeeServiceApi);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(createdEmployee, response.getBody());
+        verify(employeeServiceApi).createEmployee(employeeInput);
     }
 
     @Test

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
@@ -86,73 +87,16 @@ public class EmployeeController implements IEmployeeController<Employee, Employe
 
     @Override
     public ResponseEntity<Integer> getHighestSalaryOfEmployees() {
-        ResponseEntity<List<Employee>> response = employeeServiceApi.getAllEmployees();
-
-        if (!response.getStatusCode().is2xxSuccessful()
-                || response.getBody() == null
-                || response.getBody().isEmpty()) {
-            logger.warn("No employees found or error retrieving employees");
-            return ResponseEntity.ok(0);
-        }
-
-        Integer highestSalary = response.getBody().stream()
-                .filter(employee -> employee.getEmployeeSalary() != null)
-                .map(Employee::getEmployeeSalary)
-                .max(Integer::compareTo)
-                .orElse(0);
-
-        return ResponseEntity.ok(highestSalary);
+        return employeeServiceApi.getHighestSalaryOfEmployees();
     }
 
     @Override
     public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames() {
-        ResponseEntity<List<Employee>> response = employeeServiceApi.getAllEmployees();
-
-        if (!response.getStatusCode().is2xxSuccessful()
-                || response.getBody() == null
-                || response.getBody().isEmpty()) {
-            logger.warn("No employees found or error retrieving employees");
-            return ResponseEntity.ok(Collections.emptyList());
-        }
-
-        List<String> topTenNames = response.getBody().stream()
-                .filter(employee -> employee.getEmployeeSalary() != null && employee.getEmployeeName() != null)
-                .sorted((e1, e2) -> e2.getEmployeeSalary().compareTo(e1.getEmployeeSalary()))
-                .limit(10)
-                .map(Employee::getEmployeeName)
-                .toList();
-
-        return ResponseEntity.ok(topTenNames);
+        return employeeServiceApi.getTopTenHighestEarningEmployeeNames();
     }
 
     @Override
-    public ResponseEntity<Employee> createEmployee(EmployeeInput employeeInput) {
-        if (employeeInput == null) {
-            logger.warn("Employee input is null");
-            return ResponseEntity.badRequest().build();
-        }
-
-        // Basic validation
-        if (employeeInput.getName() == null || employeeInput.getName().trim().isEmpty()) {
-            logger.warn("Employee name is null or empty");
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (employeeInput.getSalary() == null || employeeInput.getSalary() <= 0) {
-            logger.warn("Employee salary is null or invalid");
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (employeeInput.getAge() == null || employeeInput.getAge() < 16 || employeeInput.getAge() > 75) {
-            logger.warn("Employee age is null or out of range (16-75)");
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (employeeInput.getTitle() == null || employeeInput.getTitle().trim().isEmpty()) {
-            logger.warn("Employee title is null or empty");
-            return ResponseEntity.badRequest().build();
-        }
-
+    public ResponseEntity<Employee> createEmployee(@Valid EmployeeInput employeeInput) {
         return employeeServiceApi.createEmployee(employeeInput);
     }
 

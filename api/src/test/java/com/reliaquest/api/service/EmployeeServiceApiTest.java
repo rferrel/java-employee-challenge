@@ -643,4 +643,200 @@ class EmployeeServiceApiTest {
         // Then
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
     }
+
+    // ========== getHighestSalaryOfEmployees Tests ==========
+
+    @Test
+    void getHighestSalaryOfEmployees_Success() {
+        // Given
+        List<Employee> allEmployees = Arrays.asList(
+                new Employee("1", "John Doe", 50000, 30, "Developer", "john@company.com"),
+                new Employee("2", "Jane Smith", 75000, 35, "Manager", "jane@company.com"),
+                new Employee("3", "Bob Johnson", 80000, 40, "Director", "bob@company.com"));
+        ApiResponse<List<Employee>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(allEmployees);
+
+        when(mockCache.getAllEmployees()).thenReturn(null);
+        when(mockRestTemplate.exchange(
+                        eq(testApiBaseUrl), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(apiResponse));
+
+        // When
+        ResponseEntity<Integer> response = employeeServiceApi.getHighestSalaryOfEmployees();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(80000, response.getBody());
+    }
+
+    @Test
+    void getHighestSalaryOfEmployees_NoEmployees() {
+        // Given
+        List<Employee> emptyList = Arrays.asList();
+        ApiResponse<List<Employee>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(emptyList);
+
+        when(mockCache.getAllEmployees()).thenReturn(null);
+        when(mockRestTemplate.exchange(
+                        eq(testApiBaseUrl), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(apiResponse));
+
+        // When
+        ResponseEntity<Integer> response = employeeServiceApi.getHighestSalaryOfEmployees();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(0, response.getBody());
+    }
+
+    @Test
+    void getHighestSalaryOfEmployees_WithNullSalaries() {
+        // Given
+        List<Employee> employeesWithNulls = Arrays.asList(
+                new Employee("1", "John Doe", 50000, 30, "Developer", "john@company.com"),
+                new Employee("2", "Jane Smith", null, 35, "Manager", "jane@company.com"),
+                new Employee("3", "Bob Johnson", 60000, 40, "Director", "bob@company.com"));
+        ApiResponse<List<Employee>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(employeesWithNulls);
+
+        when(mockCache.getAllEmployees()).thenReturn(null);
+        when(mockRestTemplate.exchange(
+                        eq(testApiBaseUrl), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(apiResponse));
+
+        // When
+        ResponseEntity<Integer> response = employeeServiceApi.getHighestSalaryOfEmployees();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(60000, response.getBody()); // Should ignore null salary
+    }
+
+    @Test
+    void getHighestSalaryOfEmployeesFallback_ReturnsZero() {
+        // When
+        ResponseEntity<Integer> response = employeeServiceApi.getHighestSalaryOfEmployeesFallback(
+                new Exception("Circuit breaker open"));
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(0, response.getBody());
+    }
+
+    // ========== getTopTenHighestEarningEmployeeNames Tests ==========
+
+    @Test
+    void getTopTenHighestEarningEmployeeNames_Success() {
+        // Given
+        List<Employee> allEmployees = Arrays.asList(
+                new Employee("1", "John Doe", 50000, 30, "Developer", "john@company.com"),
+                new Employee("2", "Jane Smith", 75000, 35, "Manager", "jane@company.com"),
+                new Employee("3", "Bob Johnson", 80000, 40, "Director", "bob@company.com"));
+        ApiResponse<List<Employee>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(allEmployees);
+
+        when(mockCache.getAllEmployees()).thenReturn(null);
+        when(mockRestTemplate.exchange(
+                        eq(testApiBaseUrl), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(apiResponse));
+
+        // When
+        ResponseEntity<List<String>> response = employeeServiceApi.getTopTenHighestEarningEmployeeNames();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(3, response.getBody().size());
+        assertEquals("Bob Johnson", response.getBody().get(0)); // Highest salary first
+        assertEquals("Jane Smith", response.getBody().get(1));
+        assertEquals("John Doe", response.getBody().get(2));
+    }
+
+    @Test
+    void getTopTenHighestEarningEmployeeNames_NoEmployees() {
+        // Given
+        List<Employee> emptyList = Arrays.asList();
+        ApiResponse<List<Employee>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(emptyList);
+
+        when(mockCache.getAllEmployees()).thenReturn(null);
+        when(mockRestTemplate.exchange(
+                        eq(testApiBaseUrl), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(apiResponse));
+
+        // When
+        ResponseEntity<List<String>> response = employeeServiceApi.getTopTenHighestEarningEmployeeNames();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(0, response.getBody().size());
+    }
+
+    @Test
+    void getTopTenHighestEarningEmployeeNames_WithNullValues() {
+        // Given
+        List<Employee> employeesWithNulls = Arrays.asList(
+                new Employee("1", "John Doe", 50000, 30, "Developer", "john@company.com"),
+                new Employee("2", null, 75000, 35, "Manager", "jane@company.com"), // null name
+                new Employee("3", "Bob Johnson", null, 40, "Director", "bob@company.com")); // null salary
+        ApiResponse<List<Employee>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(employeesWithNulls);
+
+        when(mockCache.getAllEmployees()).thenReturn(null);
+        when(mockRestTemplate.exchange(
+                        eq(testApiBaseUrl), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(apiResponse));
+
+        // When
+        ResponseEntity<List<String>> response = employeeServiceApi.getTopTenHighestEarningEmployeeNames();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().size()); // Should only include John Doe (non-null salary and name)
+        assertEquals("John Doe", response.getBody().get(0));
+    }
+
+    @Test
+    void getTopTenHighestEarningEmployeeNames_MoreThanTenEmployees() {
+        // Given
+        List<Employee> manyEmployees = Arrays.asList(
+                new Employee("1", "Employee 1", 10000, 30, "Developer", "emp1@company.com"),
+                new Employee("2", "Employee 2", 20000, 30, "Developer", "emp2@company.com"),
+                new Employee("3", "Employee 3", 30000, 30, "Developer", "emp3@company.com"),
+                new Employee("4", "Employee 4", 40000, 30, "Developer", "emp4@company.com"),
+                new Employee("5", "Employee 5", 50000, 30, "Developer", "emp5@company.com"),
+                new Employee("6", "Employee 6", 60000, 30, "Developer", "emp6@company.com"),
+                new Employee("7", "Employee 7", 70000, 30, "Developer", "emp7@company.com"),
+                new Employee("8", "Employee 8", 80000, 30, "Developer", "emp8@company.com"),
+                new Employee("9", "Employee 9", 90000, 30, "Developer", "emp9@company.com"),
+                new Employee("10", "Employee 10", 100000, 30, "Developer", "emp10@company.com"),
+                new Employee("11", "Employee 11", 110000, 30, "Developer", "emp11@company.com"),
+                new Employee("12", "Employee 12", 120000, 30, "Developer", "emp12@company.com"));
+        ApiResponse<List<Employee>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(manyEmployees);
+
+        when(mockCache.getAllEmployees()).thenReturn(null);
+        when(mockRestTemplate.exchange(
+                        eq(testApiBaseUrl), eq(HttpMethod.GET), isNull(), any(ParameterizedTypeReference.class)))
+                .thenReturn(ResponseEntity.ok(apiResponse));
+
+        // When
+        ResponseEntity<List<String>> response = employeeServiceApi.getTopTenHighestEarningEmployeeNames();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(10, response.getBody().size()); // Should limit to top 10
+        assertEquals("Employee 12", response.getBody().get(0)); // Highest salary
+        assertEquals("Employee 11", response.getBody().get(1));
+    }
+
+    @Test
+    void getTopTenHighestEarningEmployeeNamesFallback_ReturnsEmptyList() {
+        // When
+        ResponseEntity<List<String>> response = employeeServiceApi.getTopTenHighestEarningEmployeeNamesFallback(
+                new Exception("Circuit breaker open"));
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(0, response.getBody().size());
+    }
 }

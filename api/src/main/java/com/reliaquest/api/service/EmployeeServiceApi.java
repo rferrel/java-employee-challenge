@@ -112,6 +112,55 @@ public class EmployeeServiceApi {
         }
     }
 
+    @CircuitBreaker(name = "employee-api-get-all", fallbackMethod = "getHighestSalaryOfEmployeesFallback")
+    public ResponseEntity<Integer> getHighestSalaryOfEmployees() {
+        ResponseEntity<List<Employee>> response = getAllEmployees();
+
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null || response.getBody().isEmpty()) {
+            logger.warn("No employees found or error retrieving employees");
+            return ResponseEntity.ok(0);
+        }
+
+        Integer highestSalary = response.getBody().stream()
+                .filter(employee -> employee.getEmployeeSalary() != null)
+                .map(Employee::getEmployeeSalary)
+                .max(Integer::compareTo)
+                .orElse(0);
+
+        logger.debug("Retrieved highest salary: {}", highestSalary);
+        return ResponseEntity.ok(highestSalary);
+    }
+
+    public ResponseEntity<Integer> getHighestSalaryOfEmployeesFallback(Exception ex) {
+        logger.error("Circuit breaker fallback for getHighestSalaryOfEmployees", ex);
+        return ResponseEntity.ok(0);
+    }
+
+    @CircuitBreaker(name = "employee-api-get-all", fallbackMethod = "getTopTenHighestEarningEmployeeNamesFallback")
+    public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames() {
+        ResponseEntity<List<Employee>> response = getAllEmployees();
+
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null || response.getBody().isEmpty()) {
+            logger.warn("No employees found or error retrieving employees");
+            return ResponseEntity.ok(List.of());
+        }
+
+        List<String> topTenNames = response.getBody().stream()
+                .filter(employee -> employee.getEmployeeSalary() != null && employee.getEmployeeName() != null)
+                .sorted((e1, e2) -> e2.getEmployeeSalary().compareTo(e1.getEmployeeSalary()))
+                .limit(10)
+                .map(Employee::getEmployeeName)
+                .toList();
+
+        logger.debug("Retrieved top 10 highest earning employees: {}", topTenNames.size());
+        return ResponseEntity.ok(topTenNames);
+    }
+
+    public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNamesFallback(Exception ex) {
+        logger.error("Circuit breaker fallback for getTopTenHighestEarningEmployeeNames", ex);
+        return ResponseEntity.ok(List.of());
+    }
+
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-create", fallbackMethod = "createEmployeeFallback")
     public ResponseEntity<Employee> createEmployee(EmployeeInput employeeInput) {
