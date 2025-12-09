@@ -2,6 +2,7 @@ package com.reliaquest.api.cache;
 
 import com.reliaquest.api.model.Employee;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,20 +20,20 @@ public class EmployeeCache {
     private static final Random RANDOM = new Random();
 
     private final Map<String, CacheEntry<List<Employee>>> allEmployeesCache =
-            new LinkedHashMap<String, CacheEntry<List<Employee>>>(16, 0.75f, true) {
+            Collections.synchronizedMap(new LinkedHashMap<String, CacheEntry<List<Employee>>>(16, 0.75f, true) {
                 @Override
                 protected boolean removeEldestEntry(Map.Entry<String, CacheEntry<List<Employee>>> eldest) {
                     return size() > MAX_SIZE;
                 }
-            };
+            });
 
     private final Map<String, CacheEntry<Employee>> employeeByIdCache =
-            new LinkedHashMap<String, CacheEntry<Employee>>(16, 0.75f, true) {
+            Collections.synchronizedMap(new LinkedHashMap<String, CacheEntry<Employee>>(16, 0.75f, true) {
                 @Override
                 protected boolean removeEldestEntry(Map.Entry<String, CacheEntry<Employee>> eldest) {
                     return size() > MAX_SIZE;
                 }
-            };
+            });
 
     public List<Employee> getAllEmployees() {
         CacheEntry<List<Employee>> entry = allEmployeesCache.get(ALL_EMPLOYEES_CACHE_KEY);

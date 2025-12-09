@@ -10,8 +10,10 @@ import com.reliaquest.api.model.Employee;
 import com.reliaquest.api.model.EmployeeInput;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -335,9 +337,9 @@ class EmployeeServiceApiTest {
                 .thenReturn(ResponseEntity.ok(getResponse));
 
         when(mockRestTemplate.exchange(
-                        contains("John Doe"), // Delete by name
+                        eq(testApiBaseUrl),
                         eq(HttpMethod.DELETE),
-                        isNull(),
+                        any(HttpEntity.class),
                         any(ParameterizedTypeReference.class)))
                 .thenReturn(ResponseEntity.ok(deleteResponse));
 
@@ -348,6 +350,20 @@ class EmployeeServiceApiTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("John Doe", response.getBody());
         verify(mockCache).invalidateEmployee(employeeId);
+
+        // Verify DELETE was called with correct body
+        ArgumentCaptor<HttpEntity> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(mockRestTemplate)
+                .exchange(
+                        eq(testApiBaseUrl),
+                        eq(HttpMethod.DELETE),
+                        entityCaptor.capture(),
+                        any(ParameterizedTypeReference.class));
+
+        @SuppressWarnings("unchecked")
+        Map<String, String> deleteBody =
+                (Map<String, String>) entityCaptor.getValue().getBody();
+        assertEquals("John Doe", deleteBody.get("name"));
     }
 
     // ========== API Failure Tests ==========
@@ -493,9 +509,9 @@ class EmployeeServiceApiTest {
 
         // Mock the DELETE request
         when(mockRestTemplate.exchange(
-                        contains("John Doe"), // Delete by name
+                        eq(testApiBaseUrl),
                         eq(HttpMethod.DELETE),
-                        isNull(),
+                        any(HttpEntity.class),
                         any(ParameterizedTypeReference.class)))
                 .thenReturn(ResponseEntity.ok(deleteResponse));
 
@@ -506,6 +522,20 @@ class EmployeeServiceApiTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("John Doe", response.getBody());
         verify(mockCache).invalidateEmployee(employeeId);
+
+        // Verify DELETE was called with correct body
+        ArgumentCaptor<HttpEntity> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(mockRestTemplate)
+                .exchange(
+                        eq(testApiBaseUrl),
+                        eq(HttpMethod.DELETE),
+                        entityCaptor.capture(),
+                        any(ParameterizedTypeReference.class));
+
+        @SuppressWarnings("unchecked")
+        Map<String, String> deleteBody =
+                (Map<String, String>) entityCaptor.getValue().getBody();
+        assertEquals("John Doe", deleteBody.get("name"));
     }
 
     @Test
@@ -546,7 +576,10 @@ class EmployeeServiceApiTest {
 
         // Mock DELETE fails
         when(mockRestTemplate.exchange(
-                        contains("John Doe"), eq(HttpMethod.DELETE), isNull(), any(ParameterizedTypeReference.class)))
+                        eq(testApiBaseUrl),
+                        eq(HttpMethod.DELETE),
+                        any(HttpEntity.class),
+                        any(ParameterizedTypeReference.class)))
                 .thenReturn(ResponseEntity.badRequest().build());
 
         // When

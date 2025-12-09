@@ -307,7 +307,8 @@ deleteEmployeeById(...)
         method: DELETE
         body:
             name (String | not blank)
-        full route: http://localhost:8112/api/v1/employee/{name}
+        full route: http://localhost:8112/api/v1/employee
+        note: Employee name must be provided in request body, not as path parameter
     response:
         {
             "data": true,

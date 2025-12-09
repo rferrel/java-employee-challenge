@@ -112,6 +112,7 @@ public class EmployeeServiceApi {
         }
     }
 
+    @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-get-all", fallbackMethod = "getHighestSalaryOfEmployeesFallback")
     public ResponseEntity<Integer> getHighestSalaryOfEmployees() {
         ResponseEntity<List<Employee>> response = getAllEmployees();
@@ -138,6 +139,7 @@ public class EmployeeServiceApi {
         return ResponseEntity.ok(0);
     }
 
+    @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-get-all", fallbackMethod = "getTopTenHighestEarningEmployeeNamesFallback")
     public ResponseEntity<List<String>> getTopTenHighestEarningEmployeeNames() {
         ResponseEntity<List<Employee>> response = getAllEmployees();
@@ -201,13 +203,16 @@ public class EmployeeServiceApi {
             return ResponseEntity.notFound().build();
         }
 
-        // Delete using employee name (as per API spec)
-        String deleteUrl = UriComponentsBuilder.fromHttpUrl(mockApiBaseUrl)
-                .path("/{name}")
-                .buildAndExpand(employeeName)
-                .toUriString();
+        // Delete using employee name in request body (as per API spec)
+        // Mock API expects: DELETE /api/v1/employee with body {"name": "employeeName"}
+        java.util.Map<String, String> deleteBody = java.util.Map.of("name", employeeName);
+        HttpEntity<java.util.Map<String, String>> requestEntity = new HttpEntity<>(deleteBody);
+
         ResponseEntity<ApiResponse<Boolean>> response = restTemplate.exchange(
-                deleteUrl, HttpMethod.DELETE, null, new ParameterizedTypeReference<ApiResponse<Boolean>>() {});
+                mockApiBaseUrl,
+                HttpMethod.DELETE,
+                requestEntity,
+                new ParameterizedTypeReference<ApiResponse<Boolean>>() {});
 
         if (response.getStatusCode().is2xxSuccessful()) {
             // Invalidate both individual employee and all employees cache
