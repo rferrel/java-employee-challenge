@@ -1,6 +1,5 @@
 package com.reliaquest.api.service;
 
-import com.reliaquest.api.cache.EmployeeCache;
 import com.reliaquest.api.model.ApiResponse;
 import com.reliaquest.api.model.Employee;
 import com.reliaquest.api.model.EmployeeInput;
@@ -10,6 +9,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -22,21 +23,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class EmployeeServiceApi {
 
     private final Logger logger = LoggerFactory.getLogger(EmployeeServiceApi.class);
-    private final EmployeeCache employeeCache;
     private final RestTemplate restTemplate;
 
     @Value("${mock.api.base-url}")
     private String mockApiBaseUrl;
 
-    public EmployeeServiceApi(EmployeeCache employeeCache, RestTemplate restTemplate) {
-        this.employeeCache = employeeCache;
+    public EmployeeServiceApi(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    @Cacheable(value = "employees", unless = "#result == null || #result.body == null || #result.body.isEmpty()")
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-get-all", fallbackMethod = "getAllEmployeesFallback")
     public ResponseEntity<List<Employee>> getAllEmployees() {
-        logger.debug("Calling API for all employees");
+        logger.debug("Cache miss - calling API for all employees");
 
         ResponseEntity<ApiResponse<List<Employee>>> response = restTemplate.exchange(
                 mockApiBaseUrl, HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<List<Employee>>>() {});
@@ -53,17 +53,16 @@ public class EmployeeServiceApi {
             employees = List.of();
         }
 
-        // Cache the result
-        employeeCache.putAllEmployees(employees);
-        logger.debug("Cached {} employees", employees.size());
+        logger.debug("Successfully fetched {} employees from API", employees.size());
 
         return ResponseEntity.ok(employees);
     }
 
+    @Cacheable(value = "employeeById", key = "#id", unless = "#result == null || #result.statusCode.is4xxClientError()")
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-get-by-id", fallbackMethod = "getEmployeeByIdFallback")
     public ResponseEntity<Employee> getEmployeeById(String id) {
-        logger.debug("Calling API for employee id: {}", id);
+        logger.debug("Cache miss - calling API for employee id: {}", id);
         String url = UriComponentsBuilder.fromHttpUrl(mockApiBaseUrl)
                 .path("/{id}")
                 .buildAndExpand(id)
@@ -75,11 +74,7 @@ public class EmployeeServiceApi {
                 && response.getBody() != null
                 && response.getBody().getData() != null) {
             Employee employee = response.getBody().getData();
-
-            // Cache the result
-            employeeCache.putEmployeeById(id, employee);
-            logger.debug("Cached employee: {}", employee.getEmployeeName());
-
+            logger.debug("Successfully fetched employee: {}", employee.getEmployeeName());
             return ResponseEntity.ok(employee);
         } else {
             return ResponseEntity.notFound().build();
@@ -167,6 +162,7 @@ public class EmployeeServiceApi {
         return ResponseEntity.ok(List.of());
     }
 
+    @CacheEvict(value = "employees", allEntries = true)
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-create", fallbackMethod = "createEmployeeFallback")
     public ResponseEntity<Employee> createEmployee(EmployeeInput employeeInput) {
@@ -181,17 +177,18 @@ public class EmployeeServiceApi {
                 && response.getBody() != null
                 && response.getBody().getData() != null) {
             Employee createdEmployee = response.getBody().getData();
-
-            // Invalidate cache since we added a new employee
-            employeeCache.invalidateAll();
-            logger.debug("Cache invalidated after creating employee: {}", createdEmployee.getEmployeeName());
-
+            logger.debug(
+                    "Successfully created employee: {} - cache automatically invalidated",
+                    createdEmployee.getEmployeeName());
             return ResponseEntity.ok(createdEmployee);
         } else {
             return ResponseEntity.badRequest().build();
         }
     }
 
+    @CacheEvict(
+            value = {"employees", "employeeById"},
+            allEntries = true)
     @Retry(name = "employee-api")
     @CircuitBreaker(name = "employee-api-delete", fallbackMethod = "deleteEmployeeByIdFallback")
     public ResponseEntity<String> deleteEmployeeById(String id) {
@@ -215,10 +212,7 @@ public class EmployeeServiceApi {
                 new ParameterizedTypeReference<ApiResponse<Boolean>>() {});
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            // Invalidate both individual employee and all employees cache
-            employeeCache.invalidateEmployee(id);
-            logger.debug("Cache invalidated after deleting employee: {}", employeeName);
-
+            logger.debug("Successfully deleted employee: {} - cache automatically invalidated", employeeName);
             return ResponseEntity.ok(employeeName);
         } else {
             return ResponseEntity.badRequest().build();
@@ -246,17 +240,15 @@ public class EmployeeServiceApi {
     }
 
     // Fallback methods
+    // Note: Spring's cache may still return cached values even during circuit breaker open state
     public ResponseEntity<List<Employee>> getAllEmployeesFallback(Exception ex) {
         logger.error("Circuit breaker fallback for getAllEmployees", ex);
-        return ResponseEntity.ok(employeeCache.getAllEmployees() != null ? employeeCache.getAllEmployees() : List.of());
+        return ResponseEntity.status(503).build();
     }
 
     public ResponseEntity<Employee> getEmployeeByIdFallback(String id, Exception ex) {
         logger.error("Circuit breaker fallback for getEmployeeById: {}", id, ex);
-        Employee cached = employeeCache.getEmployeeById(id);
-        return cached != null
-                ? ResponseEntity.ok(cached)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.status(503).build();
     }
 
     public ResponseEntity<Employee> createEmployeeFallback(EmployeeInput employeeInput, Exception ex) {

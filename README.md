@@ -127,13 +127,13 @@ resilience4j:
 ### Load Testing
 ```bash
 # Basic stress test
-./stress_test.sh
+bash/stress_test.sh
 
 # Extreme load test (triggers circuit breakers)
-./extreme_load_test.sh
+bash/extreme_load_test.sh
 
 # Aggressive stress test
-./aggressive_stress_test.sh
+bash/aggressive_stress_test.sh
 ```
 
 ## Architecture Highlights

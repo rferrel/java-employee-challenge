@@ -1,5 +1,16 @@
-spring.application.name: employee-api
-server.port: 8111
+spring:
+  application:
+    name: employee-api
+  cache:
+    type: caffeine
+    cache-names:
+      - employees
+      - employeeById
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=120s,recordStats
+
+server:
+  port: 8111
 
 springdoc:
   swagger-ui:
